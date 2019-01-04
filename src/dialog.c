@@ -126,7 +126,7 @@ popdialog (Tn5250Terminal * terminal, XEvent * report)
 void
 drawdialog (Tn5250Terminal * terminal)
 {
-  char string1[25];
+  char string1[50];
   int len1;
   int width1;
   int font_height;
