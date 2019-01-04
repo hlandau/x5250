@@ -1,0 +1,41 @@
+1. Change cursor color when in reverse image fields (or use a completely
+   different color for the cursor).
+2. Complete i18n support.
+3. Change attributes of a field when a 5250 attribute character is
+   overwritten.
+4. Add 'screen debug mode' which shows 5250 attributes and pops up a
+   window when clicked showing what attributes are active.
+5. Fix bug involving the debug menu not popping down when deactivating the
+   main menu.
+
+
+
+
+Milestones
+
+Below are listed those requirements and features that must be met before a
+certain release (or milestone) is made.  This list exists in order to get a
+better idea of where this is all headed.  This does not indicate what order
+requirements will be met or features added, but rather states that by
+milestone x.y.z the listed requirements and features will be met.
+
+0.5:
+
+  * x5250 will fully implement all of the features already present in xt5250.
+
+1.0:
+
+  * Top level X windows or dialogs for 5250 "windows".
+  * Cursor progression support.
+  * Continuous field support.
+  * Word wrap field support.
+  * Copy/paste support.
+  * Key remapping.  This would normally be thought of as part of the 0.5
+    milestone, but it really belongs here.  That is because tn5250 doesn't
+    really have key remapping per se, it just uses mechanisms that already
+    exist outside of tn5250.  x5250 will use the standard X mechanisms for key
+    remapping (just as xt5250 does) but unlike xt5250 will make the mappings
+    by calling XRefreshKeyboardMapping() and related functions in addition to
+    reading the map from the default files.
+  * "Busy" mouse cursor.
+  * All customizable aspects listed in DESIGN complete.

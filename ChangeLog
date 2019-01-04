@@ -1,0 +1,405 @@
+Version 0.5.4:
+
+2011-01-31 James Rich <james@eaerich.com>
+	- Fix special characters for German.
+
+Version 0.5.3:
+
+2010-05-20 James Rich <james@eaerich.com>
+	- Add system request key to pop up dialog.
+
+2010-04-16 James Rich <james@eaerich.com>
+	- Add support for geometry setting.
+	- When using scalable fonts, size the font to fit the geometry setting.
+
+2010-02-08 James Rich <james@eaerich.com>
+	- Add support for scalable fonts.
+
+Version 0.5.2:
+
+2010-01-27 James Rich <james@eaerich.com>
+	- Fix erase_caret() to fully erase the caret with large fonts.
+	- Fix erase problem with destructive backspace.
+
+2006-01-09 James Rich <james@eaerich.com>
+	- Fix the event loop to check for all event types.  This should fix
+	  problems with x5250 getting out of sync as well as getting stuck
+	  in an infinite loop.
+
+2006-01-06 James Rich <james@eaerich.com>
+	- Fix uninitialized file descriptor when checking events.
+
+2006-01-05 James Rich <james@eaerich.com>
+	- Change configure to not require tn5250.pc.
+	- Fix crash caused by dragging the mouse outside the x5250 window
+	  in 132 column mode.
+
+2006-01-04 James Rich <james@eaerich.com>
+	- Fix window widths.
+
+2005-11-14 James Rich <james@eaerich.com>
+	- Change the key buffer used by keyhandler() to use unsigned char.
+	  This fixes issues with keysyms whose 8-bit representation starts
+	  with a 1 (anything with a keysym definition of 0x80 or higher).
+	- Remove ugly kludge for entering the cent symbol.  With the above
+	  fix it isn't needed anymore.
+	- Fix crash caused by out of bounds error when selecting text with
+	  the mouse and dragging the pointer beyond the bottom of the window.
+
+2005-11-11 James Rich <james@eaerich.com>
+	- Change draw_caret() to check that row and column arguments are
+	  sane.
+
+2005-05-25 James Rich <james@eaerich.com>
+	- Check key handler to return the integer value of the keysym to
+	  lib5250 if we don't know what the key is.  Hopefully lib5250 will.
+
+Version 0.5.1:
+
+2005-05-25 James Rich <james@eaerich.com>
+	- Add checks for Sun keysysms to configure.ac.
+	- Ignore state of caps lock key when checking maps.
+
+2005-05-12 James Rich <james@eaerich.com>
+	- Add initial support for key mapping.
+
+Version 0.5.0:
+
+2005-05-06 James Rich <james@eaerich.com>
+	- Fix uninitialized return value that cause abnormal exit.
+	- Fix selection beyond edge of window bug.
+
+2005-05-04 James Rich <james@eaerich.com>
+	- Change the X event loop to try to squash the 80->132 column screen
+	  redraw bug.
+
+2005-05-02 James Rich <james@eaerich.com>
+	- Fix performance problem introduced by the forced screen refresh
+	  mentioned below.  lib5250 now tells us when to draw a character
+	  on the screen which eliminates the need for the forced refresh.
+	  Added x5250_terminal_putkey() to handle lib5250's new callback.
+	- Fix subwindow resize problem when changing from 80 column to 132
+	  column.
+
+2005-05-01 James Rich <james@eaerich.com>
+	- Fix typeahead by forcing a screen refresh.  This isn't the way I
+	  want to solve this, but it works.  The end result is that the
+	  screen is redrawn much more than it needs to be and therefore
+	  x5250 runs slower and is less effecient.
+	- Fix problem with screen not drawing after a resize event.
+
+2005-04-09 James Rich <james@eaerich.com>
+	- Eliminate subwindow array and use linked list in lib5250 instead.
+
+2005-04-09 James Rich <james@eaerich.com>
+	- Fix menubar draws.
+	- Change menu item handling.
+
+2005-04-05 James Rich <james@eaerich.com>
+	- Begin support for 5250 menus.
+
+2005-04-04 James Rich <james@eaerich.com>
+	- Removed old word wrap code.
+
+Version 0.4.8:
+
+2005-04-02 James Rich <james@eaerich.com>
+	- Forced redraw when entering text in a word wrap field.
+	- Removed extra debugging info from resource.c.
+
+Version 0.4.7:
+
+2005-03-25 James Rich <james@eaerich.com>
+	- Finally fixed the last of the window drawing problems.
+
+2005-03-24 James Rich <james@eaerich.com>
+	- Don't realloc or free windows unless we really need to.
+
+2004-12-17 James Rich <james@eaerich.com>
+	- Handle XK_ISO_Lock through XK_ISO_Last_Group_Lock.  This was
+	  causing a 'key not handled' message to print when entering
+	  characters such as the euro or cent.
+
+2004-12-06 James Rich <james@eaerich.com>
+	- Added --debug-resources to show debugging information on the X
+	  resource database.
+
+2004-12-06 Scott Klement <tn5250@scottklement.com>
+	- Fix for Sun keyboards F11 and F12.
+
+2004-12-02 James Rich <james@eaerich.com>
+	- Changed configure.ac to automatically check for macro support in
+	  lib5250.
+
+Version 0.4.6:
+
+2004-12-01 James Rich <james@eaerich.com>
+	- Fixed up the debug menu.
+	- Removed the call to XClearWindow() when changing screen sizes.
+	- Check for all types of events to kickstart the event loop to
+	  prevent events from getting "stuck".  This still seems like the
+	  wrong solution.
+	- Fixed bug that left unerased artifacts on the screen when using
+	  5250 windows in enhanced mode.
+
+2004-11-30 James Rich <james@eaerich.com>
+	- Added a debug menu.
+	- Added a "dump screen buffer" button to the debug menu.
+	- Moved the "toggle attributes" button from the main menu to the
+	  debug menu.
+	- Fixed a bug in destroy_screen() that resulted in the screen
+	  contents not actually being erased.  This should fix the remaining
+	  problems with prior screen artifacts hanging around.
+	- Hopefully fixed problems with pasting not occurring until some
+	  other event happens.  So far so good for me, but Martin Rowe is
+	  having this problem much more than I am.  For me it has so far
+	  worked every time.  Let's see what Martin reports.
+
+2004-11-29 James Rich <james@eaerich.com>
+	- Finally removed the last call to XClearWindow().  Let's see what
+	  problems we have now...
+
+Version 0.4.5:
+
+2004-11-26 James Rich <james@eaerich.com>
+	- Fixed crash that was occuring when new windows did not cover the
+	  location of the cursor of a previous window.
+
+2004-11-15 James Rich <james@eaerich.com>
+	- Changed the screenfields buffer to be dynamically allocated.
+	- Changed the screen content buffer to be dynamically allocated.
+	- Changed the window buffer to be dynamically allocated.
+
+2004-11-04 James Rich <james@eaerich.com>
+	- Added a toggle button for column separators.
+	- Added a toggle button to display attributes.
+
+Version 0.4.4:
+
+2004-11-01 James Rich <james@eaerich.com>
+	- Fixed the out of sync key problem.  x5250_terminal_waitevent()
+	  now calls XCheckMaskEvent() to see if there are any pending
+	  key events (and puts them back in the event queue if there are).
+	  For some reason the select() statement doesn't detect key events
+	  that are waiting to be processed.  So we just force the issue.
+
+2004-10-29 James Rich <james@eaerich.com>
+	- Fixed the last of the screen redraw problems (I hope!).
+
+2004-10-26 Scott Klement <tn5250@scottklement.com>
+	- Fixed application defaults database search path.
+
+2004-10-26 James Rich <james@eaerich.com>
+	- Fixed missing #include "config.h" that was preventing
+	  getopt_long() from being compiled on platforms that support it.
+	- Removed extra VERSION definition from x5250.h and just use
+	  PACKAGE_VERSION in config.h.
+
+Version 0.4.3:
+
+2004-10-25 James Rich <james@eaerich.com>
+	- Fixed problem with caret not being erased when an AID key is
+	  pressed.
+	- Restructed build directories for better use with autoconf.
+	- Changed autoconf system to install X5250 in --datadir.
+	- Changed merge_db_X() to look for resources in DATADIR.
+
+2004-10-22 James Rich <james@eaerich.com>
+	- Fixed artifacts resulting from entering characters in blank areas
+	  of the screen that remained blank on the next screen redraw.
+
+Version 0.4.2:
+
+2004-10-22 James Rich <james@eaerich.com>
+	- Wow, has it really been that long?  Fix configure.ac to check for
+	  getopt.h (thanks to Scott Klement for showing me how).
+	- Fix up x5250.c to use these checks in a sane (and hopefully
+	  functional) way.
+	- Use getopt() instead of getopt_long() if we can't find getopt.h
+	  since getopt() appears to exist on all platforms.
+	- Remove conditional compilation of locale functions since it
+	  appears that all platforms use them the same way.
+	- Change the help text to not show long options if getopt.h doesn't
+	  exist.
+	- Remove XClearWindow() in favor of XClearArea that clears just the
+	  places we need to.  This fixes the annoying flickering problem.
+	
+2004-08-19 James Rich <james@eaerich.com>
+	- Cleanup icon a bit (ha ha!  Punny!).
+
+Version 0.4.1:
+
+2004-08-02 James Rich <james@eaerich.com>
+	- Fix enhanced 5250 protocol window support.
+
+2004-07-15 James Rich <james@eaerich.com>
+	- Began scrollbar support.
+
+2004-06-29 James Rich <james@eaerich.com>
+	- Fixed another attribute bug.
+
+Version 0.4.0:
+
+2004-06-25 James Rich <james@eaerich.com>
+	- Fixed problem with popup menu popping under the main windows and
+	  other windows.
+	- Fixed undisplayable character bug.
+	- Partially fixed "trailing attribute" bug.  We still need to update
+	  the attributes when the 5250 attribute character is overwritten.
+
+2004-06-24 James Rich <james@eaerich.com>
+	- Added support for using dots as column separators.
+	- Added a user resource for dot column separators.
+	- Updated the help text to show separator style option.
+	- Added new column separator resources to the X5250 resource file.
+	- Added K_ERASE, K_REFRESH, K_MEMO, K_TESTREQ, and K_EXEC keys.
+	- Added cleanup code that runs when the main loop exits.
+	- Tested macro feature to verify it works.  Compile with
+	  -DMACRO_SUPPORT to enable.
+	- Changed main window hints to allow the window manager to place
+	  the window.
+	- Changed popup menu to be a top level window like a popup should be.
+
+2004-06-23 Frank Richter <frichter@esda.com>
+	- Partial support for German keyboards.
+
+2004-06-23 James Rich <james@eaerich.com>
+	- Changed ruler to be dotted lines.
+	- Fixed bug involving field buffers not being cleared properly.
+	  This resulted in the next screen possibly being drawn with
+	  incorrect attributes for some fields.
+	- Added support for column separators.
+	- Added a user resource for column separators.
+	- Updated the help text to show new ruler and column separator options.
+
+2004-06-22 James Rich <james@eaerich.com>
+	- Added a ruler.
+	- Added a user resource for ruler.
+	- Added a menu item to toggle ruler state.
+	- Made Control-x do field exit.
+
+Version 0.1.8a:
+
+2004-06-22 James Rich <james@eaerich.com>
+	- Fixed a screen drawing problem noticed by Martin Rowe.  Thanks for
+	  the bug report Martin!
+
+Version 0.1.8:
+
+2004-06-22 James Rich <james@eaerich.com>
+	- Improved handling of extended 5250 window attributes.  This still
+	  requires a patch for tn5250 to work.
+
+2004-06-21 James Rich <james@eaerich.com>
+	- Added missing tracefile support.
+	- Added current column/row to bottom right of window.
+
+2004-06-20 James Rich <james@eaerich.com>
+	- Added a user resource for 132 column font.
+	- Added 132 column font.
+	- Removed some hard coded references to screen size and fixed up some
+	  for loops.
+	- Updated help text to show new 132 column font option.
+	- Changed the splash screen to not mention demo anymore (if anyone ever
+	  sees the splash screen).
+	- Added the font resources to the X5250 resource file.
+	- Changed the menu text to say "Ctrl" instead of "Cntrl".
+	- Fix problem with entire window being selected when left mouse button
+	  is pressed on the popup menu.
+
+2004-06-18 James Rich <james@eaerich.com>
+	- Fixed resource handling for font and title.
+
+Version 0.1.7:
+
+2004-06-18 James Rich <james@eaerich.com>
+	- Added a user resource for paste behaviour.
+
+2004-06-17 James Rich <james@eaerich.com>
+	- Added DUP key support (control-d).
+	- Fixed copy problem that caused x5250 to crash when pasting into
+	  apps like Gaim.
+	- Fixed text drawing one row too low problem introduced in 0.1.6.
+	- Fixed problem with cursor sometimes being filled in when the window
+	  did not have focus.
+	- Fixed backspace key.
+	- Added a user resource for bell volume.
+
+Version 0.1.6:
+
+2004-06-17 James Rich <james@eaerich.com>
+	- Added Control-q to quit keyboard short cut.
+	- Put shortcut key labels on menu.
+
+2004-06-16 James Rich <james@eaerich.com>
+	- Added X5250 resource file.  This should be installed in
+	  /usr/X11/lib/X11/app-defaults.
+	- Fixed selection handling when we receive a SelectionClear event.
+	- Fixed text spacing problem with different fonts.
+	- Fixed menu item spacing.
+	- Fixed long font name segmentation fault problem.
+	- Fixed the Home key.
+	- Updated the help message to show the font option.
+	- Fixed non-highlight of blanks in selection problem.
+	- Made the cursor be a solid block when window has focus.
+	- Fixed problem with cursor disappearing when mouse button is pressed.
+
+2004-06-16 Martin Rowe <martin@dbg400.net>
+	- Fixed yellow color attribute.
+
+2004-06-15 James Rich <james@eaerich.com>
+	- Added font preference via user defaults.
+
+Version 0.1.5:
+
+2004-06-15 James Rich <james@eaerich.com>
+	- Added selection copy.  Copy and paste are now completely done.
+	- Started initial work on the extended (or enhanced) 5250 protocol.
+	  Added support to x5250 to handle the create window structured field
+	  5250 command.  Patched session.c (part of tn5250) to instruct the
+	  remote host to use the extended 5250 protocol.  In order to compile
+	  x5250 to use this code, you must use -DENHANCED when compiling x5250
+	  and put "+enhanced" in your .tn5250rc file.
+
+2004-06-14 James Rich <james@eaerich.com>
+	- Fixed screen update problem after insert key was pressed.
+
+2004-06-13 James Rich <james@eaerich.com>
+	- Made text selections be highlighted.
+
+2004-06-11 James Rich <james@eaerich.com>
+	- Fixed the insert key.
+	- Fixed the delete key.
+	- Moved the reset key onto the right-click menu (Cntrl-R still works
+	  as well).
+	- Shift+middle click now left aligns pasted text.
+
+2004-06-10 James Rich <james@eaerich.com>
+	- Made text paste work.  It would be nice to have an ability to choose
+	  newline handling method:  left align, simple newline, or ignore
+	  newline characters.
+	- Changed text on quit menu item.
+
+Version 0.1.4:
+
+2004-06-09 James Rich <james@eaerich.com>
+	- Created a pop up dialog that is activated/deactivated with mouse
+	  button 3.
+	- Created two menu items for the pop up dialog:  one for the help
+	  key and one to quit.
+
+2004-06-08 James Rich <james@eaerich.com>
+	- Enabled -name option.
+	- Enabled -title option.
+	- Fixed resource allocation order.
+	- Changed window title and icon name to use hostname as given by
+	  tn5250_config_get (tn5250config, "host") instead of using argv[1]
+	  (unless overridden by the -title option).
+
+Version 0.1.3:
+
+2004-06-08 James Rich <james@eaerich.com>
+	- Fixed foreground and background color allocation.
+
+2004-06-07 Scott Klement <klemscot@klements.com>
+	- Added autoconf/automake support to x5250 project.

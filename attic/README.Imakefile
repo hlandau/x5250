@@ -1,0 +1,10 @@
+Use the Imakefile and config.h in this directory if you have trouble getting
+autoconf to work (if for example you have an old machine that doesn't
+support pkgconfig).  To use the Imakefile just follow these steps:
+
+1.  Copy Imakefile to the src directory (cp Imakefile ../src)
+2.  Copy config.h to the parent directory (cp config.h ../)
+3.  Change to the src directory and issue the xmkmf command
+4.  Then use 'make' like normal.
+5.  As root copy the x5250 binary to your favorite location (/usr/bin is a good
+    place).

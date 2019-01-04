@@ -1,0 +1,187 @@
+This file describes how x5250 is architected and designed to work.
+
+
+
+Contents:
+   Part 1  - the buffers
+	1a - the buffer contents and attributes
+	2  - X and network events
+	3  - User defaults (preferences)
+
+
+
+Part 1 - the buffers
+
+x5250 uses dynamic buffers to represent the screen.  This buffer consists
+of a 132 column by 27 row array.  There is an identical array for each 5250
+"window" as well.  The screen buffer is defined in x5250.c as:
+
+unsigned int buf5250[10][27][133];
+
+Note that it has 133 columns.  This is a holdover from an earlier design and
+should be changed to 132 (it used to use a char instead of an unsigned int
+and used the last column for the null character).
+
+As you can see, it is temporarily coded to only support up to 9 5250 windows
+(1 main screen + 9 subwindows).  This will be changed to be dynamically
+allocated so that an unlimited number of subwindows can be displayed.  Note
+that this refers to subwindows that are concurrently displayed.  Any number
+of subwindows may be displayed one after another, but only 9 may be
+displayed at once.
+
+In addition to the screen buffer, x5250 also uses a buffer for the 5250
+fields.  The field buffer is seperate from the screen buffer to simplify
+field-level operations, such as returning the contents of the fields,
+filling the fields with data, and setting attributes related to the look and
+behaviour of the field.  The field buffer is defined in x5250.c as:
+
+screenfields *fields5250[10];
+
+The screenfields type is defined in x5250.h as:
+
+typedef struct _screenfields
+{
+  unsigned int totalfields;
+  field5250 fields[1782];
+} screenfields;
+
+And the field5250 type is defined in x5250.h as:
+
+typedef struct _field5250
+{
+  unsigned int fieldid;		/* Numeric ID of this field */
+  short inputcapable;		/* Boolean input capable */
+  short continuous;		/* Boolean is a continuous field */
+  short wordwrap;		/* Boolean is a word wrap field */
+  unsigned int row;		/* Row field starts on */
+  unsigned int column;		/* Column field starts on */
+  unsigned int length;		/* length (in characters) of field */
+  unsigned int nextfieldprogressionid;	/* Field ID of next field cursor
+					 * should move to */
+  unsigned int contents[3564];	/* Contents of field (same as the
+				 * contents of buf5250 for the
+				 * same row and column) */
+} field5250;
+
+Again, like the screen buffer, the field buffer is temporarily limited to
+10 screens.  The main screen and each subwindow have their own field buffer.
+
+There is a dynamic array used to keep track of subwindows.  While not really
+a buffer for 5250 use per se, it is a buffer of subwindows.  Each element
+refers to a subwindow currently being displayed.  It is defined in x5250.c
+as:
+
+window5250 win5250[10] = { {0, 0, 0, 0, 0, {0}} };
+
+The window5250 data type is defined in x5250.h as:
+
+typedef struct _window5250
+{
+  unsigned int windowid;	/* Numeric ID of this window */
+  unsigned int row;		/* Row window starts on */
+  unsigned int column;		/* Column window starts on */
+  unsigned int height;		/* height (in characters) of window */
+  unsigned int width;		/* width (in characters) of window */
+  unsigned int border[4];	/* Characters used to create borders
+				 * Uses the masks as buf5250 */
+} window5250;
+
+Currently the border[] member is completely ignored.  All subwindows are
+actual X11 windows, and the borders don't support characters as border
+attributes.  This has plusses and minuses.  The minus is that windows won't
+look like they would on a real 5250 display.  The plus is that we the
+ability to make the windows be top level windows and pop up anywhere on the
+display.  That means that a 5250 "window" that is designed to work like a
+dialog box can actually pop up as a real dialog box with the window manager
+putting on the appropriate window decorations and management.
+
+
+
+Part 1a - the buffer contents and attributes
+
+Both buf5250[] (the screen buffer) and the contents[] member of fields5250[]
+(the field buffer) are defined as unsigned int.  They are defined this way
+in order to include the attributes of the text along with the characters
+themselves.  Doing so allows us to redraw any character without having to
+go back and find out what attributes should be used.  This has a side
+benefit of not requiring a non-visible place holding character to change
+attributes mid-field (though it is very unlikely that this benefit would
+actually ever be useful - most screens are designed and most programs
+written with the non-displayable character in mind, and eliminating that
+character would probably cause unwanted results).
+
+The structure of the attributes and content of these buffers are defined in
+x5250.h using #define declarations.  For example, the red attribute is
+defined as:
+
+#define A_X5250_RED		0x00000200
+
+Attributes are set by using the 'or' operator with the contents and the
+various attributes desired.  The attributes and contents can then be
+individually extracted using the 'and' operator with the appropriate mask
+(also defined in x5250.h).
+
+
+
+Part 2 - X and network events
+
+x5250 needs to monitor two types of events:  X events and network events.  X
+events occur whenever the mouse moves, a key or mouse button is pressed or
+released, or a window (or part of a window) is exposed.  Network events
+occur whenever there is data coming in from the remote host that we need to
+handle.
+
+These two types of events are handled by assigning a file descriptor to each
+type and then monitoring those file descriptors using select().  This allows
+us to process each seperately and have a fast responding interface.
+
+The file descriptor for Xlib is done in x5250term.c like this:
+
+  xconnectionfd = XConnectionNumber (display);
+
+This file descriptor lets select() know when there are pending X events that
+need to be handled.
+
+An additional file descriptor is needed to indicate that there is 5250 data
+that needs to be handled.  This is gotten from lib5250 and placed in the
+conn_fd member of the Tn5250Terminal structure.
+
+With these two file descriptors in place we can call select() and monitor
+for network activity and X events simultaneously.  It is important to note
+that when processing X events, the X function XNextEvent() cannot be used
+since it blocks if there are no pending events in the queue.  Therefore we
+use XCheckMaskEvent() to look for events, supplying the appropriate event
+masks.  The problem with this is that there is no event mask for
+SelectionNotify events, so we can't very well set one up for XCheckMaskEvent().
+That means we must first make a call to XCheckTypedEvent() as this can use
+an event type directly instead of a mask.
+
+
+
+Part 3 - User defaults (preferences)
+
+Here we try to make a list of the parts of x5250 that are user customizable
+through the X defaults mechanism.  Hopefully we get everything :)
+
+  regular font (80 column)
+  regular font (132 column)
+  bold font (80 column)
+  bold font (132 column)
+  background color
+  foreground color
+  color used for green
+  color used for white
+  color used for red
+  color used for yellow
+  color used for pink
+  color used for blue
+  color used for turquoise
+  color used for black
+  bell volume
+  make 5250 "windows" be top level X windows
+  geometry for 80 column window (this will affect 80 column font)
+  geometry for 132 column window (this will affec 132 columnt font)
+  message indicator (flag or 'MSG' or other)
+  busy indicator (mouse cursor or 'X <type>')
+  key map
+  title bar content with keywords for remote host, workstation ID, etc.

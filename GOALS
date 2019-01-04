@@ -1,0 +1,14 @@
+x5250
+
+x5250 has the following goals:
+
+1. Lightweight, high performance
+2. Fully implement the 5250 protocol
+3. Work in a network friendly way (i.e. use things like backing store)
+4. Fully customizable using standard X11 resource files
+5. Fully ICCCM compliant
+
+x5250 does not do the following:
+
+1. Data or file transfer between hosts
+2. Printer emulation

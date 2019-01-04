@@ -1,0 +1,46 @@
+This is the README for x5250.  x5250 is distributed under the GNU General
+Public License.  Please see the file COPYING for complete details.
+
+
+Requirements:
+1. x5250 uses lib5250.so from the tn5250 project.  You can download tn5250
+from http://tn5250.sourceforge.net.  Any release will work, but you will
+get the best results with current cvs or release 0.17.2 or later.
+
+2. X11 Window System.  This part is probably already installed on your
+machine :)
+
+
+Installation:
+1. extract the tarball (which you must have done already) using:
+	tar -xvzf x5250-<version>.tar.gz
+or:
+	gunzip x5250-<version>.tar.gz
+	tar -xvf x5250-<version>.tar
+
+where <version> is the version number you downloaded.
+
+2. Change into the x5250-<version> directory and type:
+	./configure
+
+3. And finally:
+	make
+
+Everything should build with a few warnings.  You can install x5250
+using:
+
+	make install
+
+If autoconf doesn't work for you the Imake method is still available.  Just
+copy the Imakefile from the attic/ directory and edit it appropriately.
+Then do 'xmkmf' followed by 'make'.  There is no 'make install' using the
+Imake method, but at least it will compile.
+
+To see a (partial) list of what remains to be done look at the file TODO.
+
+If you are interested in developing x5250 or if you want to understand it's
+design, please see the file DESIGN.  It would be a good idea to take a look
+at the file GOALS as well.
+
+If you have any questions/comments/flames/suggestions please email them to
+me at james@eaerich.com

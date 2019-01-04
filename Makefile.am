@@ -1,0 +1,7 @@
+EXTRA_DIST = DESIGN GOALS README.keymap TODO X5250
+
+SUBDIRS = src bitmaps attic
+
+pkgdata_DATA = X5250
+
+CLEANFILES = *~

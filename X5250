@@ -1,0 +1,54 @@
+X5250*Font			: 9x15
+X5250*Font132			: 7x13
+
+X5250*Background		: black
+X5250*Redcolor			: red
+X5250*Greencolor		: green
+X5250*Bluecolor			: blue
+X5250*Whitecolor		: white
+X5250*Yellowcolor		: yellow
+X5250*Turquoisecolor		: turquoise
+X5250*Pinkcolor			: pink
+X5250*Greycolor			: grey
+X5250*Bell			: 100
+X5250*Pastecursor		: False
+X5250*Ruler			: False
+X5250*Columnseparators		: True
+X5250*Separatordots		: False
+
+!! Hex values for key maps can be found in /usr/include/X11/keysymdef.h
+!! Bit masks for modifier keys can be found in /usr/include/X11/X.h
+!X5250*Enterkey			: 0xFF0D
+!X5250*Attentionkey		: 0xFF1B
+!X5250*Sysrequestkey		: (0x08 0xFF15)
+!X5250*Resetkey			: (0x04 0x72)
+!X5250*Helpkey			: (0x04 0x68)
+!X5250*Newlinekey		: (0x04 0x6E)
+!X5250*Dupkey			: (0x04 0x64)
+!X5250*Fieldexitkey		: 0xFF8D
+!X5250*Fieldpluskey		: 0xFFAB
+!X5250*Fieldminuskey		: 0xFFAD
+!X5250*F1key			: 0xFFBE
+!X5250*F2key			: 0xFFBF
+!X5250*F3key			: 0xFFC0
+!X5250*F4key			: 0xFFC1
+!X5250*F5key			: 0xFFC2
+!X5250*F6key			: 0xFFC3
+!X5250*F7key			: 0xFFC4
+!X5250*F8key			: 0xFFC5
+!X5250*F9key			: 0xFFC6
+!X5250*F10key			: 0xFFC7
+!X5250*F11key			: 0xFFC8
+!X5250*F12key			: 0xFFC9
+!X5250*F13key			: (0x01 0xFFBE)
+!X5250*F14key			: (0x01 0xFFBF)
+!X5250*F15key			: (0x01 0xFFC0)
+!X5250*F16key			: (0x01 0xFFC1)
+!X5250*F17key			: (0x01 0xFFC2)
+!X5250*F18key			: (0x01 0xFFC3)
+!X5250*F19key			: (0x01 0xFFC4)
+!X5250*F20key			: (0x01 0xFFC5)
+!X5250*F21key			: (0x01 0xFFC6)
+!X5250*F22key			: (0x01 0xFFC7)
+!X5250*F23key			: (0x01 0xFFC8)
+!X5250*F24key			: (0x01 0xFFC9)

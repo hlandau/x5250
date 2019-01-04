@@ -1,0 +1,107 @@
+Key mapping in x5250 is accomplished using X resources just like every other
+customizable feature.  And just like every other resource key maps can be
+specified at a system level as well as a user level.  The system level
+resources are stored in $PREFIX/share/x5250/X5250 where $PREFIX is what you
+specified in the --prefix option in ./configure (if you didn't specify
+anything this defaults to /usr/local).  The user level resources are in
+$HOME/.Xdefaults (where $HOME is your home directory).
+
+The key map resources all have a similar form.  An example of the enter key
+resource is below:
+
+X5250*Enterkey			: 0xFF0D
+
+All key map resources are named <key>key where <key> is the name of the key
+you want to override.  The rules for capitalization of resource names are
+defined by X11 and are outside the scope of this document.  Suffice it to
+say that capitalized names denote classes and lower case name denote specific
+instances.  See your X11 documentation for more info.
+
+Key map resource values consist of hex keysyms.  The keysyms are not
+generally portable across different platforms.  However, it is simple to find
+out what keysym corresponds to a given key by using the 'xev' program included
+in your X11 distribution.  For example, to find out what keysym corresponds
+to the right control key start xev from a terminal and press the right control
+key.  On the terminal you will see something similar to the following output:
+
+KeyPress event, serial 24, synthetic NO, window 0x2000001,
+    root 0x5d, subw 0x0, time 68254049, (92,58), root:(1887,82),
+    state 0x0, keycode 109 (keysym 0xffe4, Control_R), same_screen YES,
+    XLookupString gives 0 bytes: 
+    XmbLookupString gives 0 bytes: 
+    XFilterEvent returns: False
+
+The important values here are "state 0x0" and "keycode 109 (keysym 0xffe4,
+Control_R)".  The state indicates what other modifier keys were being held at
+same time as this key was pressed.  The keysym value is 0xffe4 which is what
+we are interested in.  Thus to map the 'enter' key to be the right control
+key we would set the following resource:
+
+X5250*Enterkey			: 0xFFE4
+
+This will make all instances of x5250 use the right control key as 'enter'.
+
+You can also make key maps that use key combinations.  Key combination maps
+are enclosed in parentheses and are of the form (<state> <keysym>).  Again you
+use xev to find out what values to use for state and keysym.  For example,
+suppose you wanted to map shift+enter to field exit.  Using xev, press shift
+and enter together and look on your terminal for a line similar to the
+following:
+
+KeyPress event, serial 27, synthetic NO, window 0x2000001,
+    root 0x5d, subw 0x0, time 68963306, (102,113), root:(1897,137),
+    state 0x1, keycode 36 (keysym 0xff0d, Return), same_screen YES,
+"   XLookupString gives 1 bytes: (0d) "
+"   XmbLookupString gives 1 bytes: (0d) "
+    XFilterEvent returns: False
+
+This time the value of state is 0x1 and the keysym value is 0xff0d.  So the
+correct resource for this is:
+
+X5250*Fieldexitkey			: (0x1 0xFF0D)
+
+State values can be listed separately, though xev doesn't do so.  On my
+system, the state value for shift is 0x1 and the state value for control is
+0x4.  Pressing both of these together in xev will result in a state value of
+0x5.  Thus for shift+ctrl+enter you could use either (0x1 0x4 0xFF0D) or
+(0x5 0xFF0D).
+
+You can also make multiple maps for the same key.  Maps are separated by
+spaces.  If you wanted to make both the return key and the 10-key enter key
+map to field exit, you would use the following resource:
+
+X5250*Fieldexitkey			: 0xFF0D 0xFF8D
+
+Of course, use xev to verify that the above keysyms are correct for your
+system.
+
+Multiple key maps using key combinations are also supported.  There is no
+limit to the number of key maps you can specify.
+
+For a complete list of keys which can be mapped and their resource names
+please the file X5250 included in the x5250 distribution.
+
+Finally, keep in mind that keymap resources are in addition to the x5250
+default key maps, not in place of.  Thus if you map 'enter' to right control
+the default of return (or the 'real' enter key) is still active.  The X5250
+resource file lists the current default key maps.
+
+
+Addtional notes:
+
+Resource files use the ! character to indicate a comment.  Any line beginning
+with ! will be ignored.  The X5250 resource file included in the x5250
+distribution has all the key map resources commented (because they are coded
+into x5250 itself).  Be sure to remove the ! from the beginning of the line
+to make your resources effective.
+
+The state field in xev will show all modifier keys that are currently active,
+including some that you may not think of as modifier keys.  For example, the
+NumLock key is a modifier key.  On my system, if the NumLock key is active
+the state field will show 0x10 with no other modifier keys pressed.  Be sure
+that the state field doesn't have something you don't expect (i.e. unset all
+modifier keys when using xev).  x5250 ignores the state of NumLock and
+CapsLock when checking the current key states, but can't determine if you have
+included them in the state field of your maps.  Therefore, if you include
+either of these keys in the state field of your maps x5250 won't be able to
+match them.

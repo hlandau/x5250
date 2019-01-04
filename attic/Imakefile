@@ -1,0 +1,35 @@
+#
+# Imakefile for x5250
+#
+# The CDEBUGFLAGS line probably needs to be changed.  Almost certainly
+# it is not the correct place for -I includes, but for now it will work.
+# You should change the -I include to match the output of either
+# 'glib-config --cflags' or 'pkg-config --cflags glib' depending on how
+# recent your glib is.  On my Slackware system both work fine.
+#
+# Make sure that lib5250.so is in one of the locations specified in
+# /etc/ld.so.conf or the linker won't work.
+
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+# Uncomment the line below if you use the CVS version of tn5250 (version
+# 0.17.x) and comment the next immediately after it.
+
+CDEBUGFLAGS= -I.. -O2 -DHAVE_LOCALE_H -DHAVE_GETOPT_H
+#CDEBUGFLAGS= -Wall -g
+
+SRCS1=	x5250.c x5250term.c alloccolors.c dialog.c key.c mouse.c resources.c \
+	help.c debug.c
+OBJS1=	x5250.o x5250term.o alloccolors.o dialog.o key.o mouse.o resources.o \
+	help.o debug.o
+
+PROGRAMS = x5250
+
+all::  $(PROGRAMS)
+
+# Uncomment the line below if you use the CVS version of tn5250 (version
+# 0.17.x) and comment the next immediately after it.
+
+LOCAL_LIBRARIES = $(XLIB) -l5250
+
+NormalProgramTarget(x5250,$(OBJS1),,$(LOCAL_LIBRARIES),)
