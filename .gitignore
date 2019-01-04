@@ -1,0 +1,11 @@
+*.o
+*.swp
+Makefile
+attic/Makefile
+bitmaps/Makefile
+config.h
+config.log
+config.status
+src/.deps/
+src/x5250
+stamp-h1
